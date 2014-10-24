@@ -1,0 +1,73 @@
+<div class="row" ng-controller="UsermanagerController" ng-init="getusertypes();" >
+
+<div class="row">
+	<div class="col-md-5 text-right">
+		  &nbsp;
+	</div>
+	<div class="col-md-2 text-right">
+		  <input class="form-control" type="text" value="" ng-model="spaginate.search" />
+	</div>
+	<div class="col-md-1 text-left">
+		<button class="btn btn-primary" ng-click="search();">Search</button>
+	</div>
+	<div class="col-md-1 text-left">
+		<button class="btn btn-primary" ng-click="reset();">Reset</button>
+	</div>
+	<div class="col-md-1 text-left">
+		  <a class="btn btn-primary" bt-acl field="CREATE_USER"  acl="access_control" href="#/{{pages.CREATE_USER}}">Add User</a>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6 col-md-push-1">
+	<h2>All Users</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-9 col-md-push-1">	
+	<table class="table table-hover" ng-init="listUser();">
+		<thead>
+			<tr>
+			  <th>#</th>
+			  <th>Username</th>
+			  <th><a href="#/list_user/1">Email</a></th>
+			  <th>User Type</th>
+			  <th>Options</th>
+			</tr>
+		  </thead>
+		  <tbody>
+		   
+			<tr  ng-if="nodata==''" ng-repeat="list in user_lists">
+			  <td>{{list.id}}</td>
+			  <td>{{list.name}}</td>
+			  <td>{{list.useremail}}</td>
+			  <td>{{list.type}}</td>
+			  <td><a bt-acl field="EDIT_USER"  acl="access_control" href="#/{{pages.EDIT_USER}}/{{list.id}}" title="edit" alt="edit"><span  class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a bt-acl field="DELETE_USER"  acl="access_control" href="javascript:;" ng-click="removeUser(list.id);"  title="remove" alt="remove"><span  class="glyphicon glyphicon-remove"></span></a></td>
+			</tr>
+			<tr ng-if="nodata!=''"><td colspan="3" class="text-center"><b>{{nodata}}</b></td></tr>
+		</tbody>
+	</table>
+	</div>
+</div>
+	<div class="row">
+		<div class="col-md-4 col-md-push-1">
+			<bt-paginate paginate="spaginate"></bt-paginate>
+		</div>
+		<div class="col-md-2 text-right"><b>Per Page:</b></div>
+		<div class="col-md-2">
+			<select class="form-control" ng-change="change_perpage();" ng-model="spaginate.per_page">
+			<option value="3">3</option>
+			<option value="6">6</option>
+			<option value="9">9</option>
+			</select>
+		</div>
+		<div class="col-md-2 text-right"><b>User Types:</b></div>
+		<div class="col-md-2 text-right">
+			<select  class="form-control" ng-change="change_usertype();" ng-model="spaginate.user_type">
+			<option value="">ALL</option>
+			<option ng-repeat="user_type in user_types" ng-selected="spaginate.user_type == user_type.id"  value="{{user_type.id}}">{{user_type.name}}</option>
+			</select>
+		</div>
+	</div>
+
+</div>

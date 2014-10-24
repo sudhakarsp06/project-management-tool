@@ -1,0 +1,91 @@
+<div class="row" ng-controller="ProjectsController" ng-init="init(); getaproject(); getassignees(); " >
+
+<div class="col-md-9 col-md-pull-1">
+
+<form class="form-horizontal" name="adduserform" role="form">
+  
+  <div class="form-group">
+	<div class="col-md-6 col-md-push-2">
+	  <h2 ng-show="fields.id.value == 0 ">{{ 'CREATE_PROJECT.pagetitle' | translate }}</h2>	
+	  <h2 ng-show="fields.id.value > 0 ">{{ 'CREATE_PROJECT.edittitle' | translate }}</h2>	
+	</div>
+	
+  </div>
+  
+  <div class="form-group">
+	<label for="inputEmail3" class="col-sm-4 control-label">{{ 'CREATE_PROJECT.proj_title' | translate }}</label>
+	<div class="col-sm-8">
+	  <input type="text" ng-model="fields.title.value" class="form-control" placeholder="{{ 'CREATE_PROJECT.proj_title' | translate }}" >
+	</div>	
+  </div>
+  
+  
+    <div class="form-group">
+    <label for="inputEmail3" class="col-sm-4 control-label">{{ 'CREATE_PROJECT.proj_desc' | translate }}</label>
+    <div class="col-sm-8 has-success has-warning has-feedback" >
+      <textarea  ng-model="fields.description.value" class="form-control" placeholder="{{ 'CREATE_PROJECT.proj_desc' | translate }}">
+	  
+	  </textarea>
+	 
+    </div>
+  </div>
+  
+   <!--div ng-if="fields.id.value > 0" class="form-group">
+    <label for="inputEmail3" class="col-sm-4 control-label">{{ 'CREATE_PROJECT.team' | translate }}</label>
+    <div  class="col-sm-8 has-success has-warning has-feedback" id="teams_container" >
+	<div ng-repeat="team in teams" style="padding:2px; width:auto; margin-left:5px; float:left;" class="alert alert-warning alert-dismissible" role="alert">
+		<button type="button" id="{{team.id}}" class="close" data-dismiss="alert"><span ng-click="removeAssign(fields.id.value,team.id)" aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		<strong>{{team.name}}</strong>
+		</div>
+	 
+    </div>
+  </div-->
+  
+  <div ng-if="fields.id.value > 0" class="form-group">
+    <label for="inputEmail3" class="col-sm-4 control-label">{{ 'CREATE_PROJECT.proj_team' | translate }}</label>
+    <div class="col-sm-8 has-success has-warning has-feedback" >
+      
+	  <div style="border:1px solid #000; padding:3px;height: auto;width: 445px;float: left;">
+	  <div ng-repeat="team in teams" ng-init="fields.teams.value='';" style="padding:1px; width:auto; margin-left:5px; float:left;margin-bottom:3px;" class="alert alert-warning alert-dismissible" role="alert">
+		<button type="button" id="{{team.id}}" class="close" data-dismiss="alert"><span ng-click="removeAssign(fields.id.value,team.id)" aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		<strong>{{team.name}}</strong>
+		</div>
+	  <input style="width:55px;border:none;padding-right:0px;float:left;" bt-autosuggest table="users" field="username" projectid="{{fields.id.value}}" suggest="autosug" teams="teams" type="text" ng-model="fields.teams.value" class="form-control" placeholder="{{ 'CREATE_PROJECT.proj_team' | translate }}" >
+	  </div>		
+	<div  class="list-group" style="clear:both;" ng-show="autosug.data != ''" >
+		 <a class="list-group-item" ng-if="autosug.data == ''">{{autosug.nodata}}</a>
+		 <a ng-if="autosug.nodata == ''"  user-id="{{page.id}}" project-id="{{fields.id.value}}"  user-username="{{page.name}}"   ng-repeat="page in autosug.data" href="javascript:;"  class="list-group-item">{{page.name}}</a>
+	</div>
+    </div>
+  </div>
+ 
+
+  	
+  <div class="form-group">
+    <div class="col-sm-offset-4 col-sm-8">
+      <button type="submit" class="btn btn-default btn-primary" ng-show="fields.id.value == 0 " ng-click="addProject();" >{{ 'GENERAL.add' | translate }}</button>
+	  <button type="submit" class="btn btn-default btn-primary" ng-show="fields.id.value > 0 " ng-click="addProject();" >{{ 'GENERAL.update' | translate }}</button>
+	   <button type="button" class="btn btn-default btn-danger" ng-click="cancel();" >{{ 'GENERAL.cancel' | translate }}</button>
+    </div>
+  </div>
+  <input type="hidden" value="" ng-model="fields.id.value" />
+</form>
+</div>
+</div>
+<style>
+.has-feedback .form-control {
+padding-right:42.5px;
+}
+
+.form-control-feedback {
+position: absolute;
+top: 0px;
+right: -10px;
+z-index: 2;
+display: block;
+width: 34px;
+height: 34px;
+line-height: 34px;
+text-align: center;
+}
+</style>

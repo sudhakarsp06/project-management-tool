@@ -1,0 +1,67 @@
+<div class="row" ng-controller="RolesmanagerController"  >
+
+<div class="row">
+	<div class="col-md-5 text-right">
+		  &nbsp;
+	</div>
+	<div class="col-md-2 text-right">
+		  <input class="form-control" type="text" value="" ng-model="spaginate.search" />
+	</div>
+	<div class="col-md-1 text-left">
+		<button class="btn btn-primary" ng-click="search();">Search</button>
+	</div>
+	<div class="col-md-1 text-left">
+		<button class="btn btn-primary" ng-click="reset();">Reset</button>
+	</div>
+	<div class="col-md-1 text-left">
+		  <a class="btn btn-primary" href="#/create_roles">Add Action Role</a>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6 col-md-push-1">
+	<h2>All Actions</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-9 col-md-push-1">	
+	<table class="table table-hover" ng-init="listUserRoles();">
+		<thead>
+			<tr>
+			  <th>#</th>
+			  <th>Page Name</th>
+			  <th>Page URL</th>
+			  <th>Page Code</th>
+			  <th>Options</th>
+			</tr>
+		  </thead>
+		  <tbody>
+		   
+			<tr  ng-if="nodata==''" ng-repeat="list in user_lists">
+			  <td>{{list.id}}</td>
+			  <td>{{list.name}}</td>
+			  <td>{{list.page_url}}</td>
+			  <td>{{list.role_key}}</td>
+			  <td><a href="#/edit_userrole/{{list.id}}" title="edit" alt="edit"><span  class="glyphicon glyphicon-pencil"></span></a>&nbsp;<!--a href="javascript:;" ng-click="removeUser(list.id);"  title="remove" alt="remove"><span  class="glyphicon glyphicon-remove"></span></a--></td>
+			</tr>
+			<tr ng-if="nodata!=''"><td colspan="3" class="text-center"><b>{{nodata}}</b></td></tr>
+		</tbody>
+	</table>
+	</div>
+</div>
+	<div class="row">
+		<div class="col-md-4 col-md-push-1">
+			<bt-paginate paginate="spaginate"></bt-paginate>
+		</div>
+		<div class="col-md-2 text-right"><b>Per Page:</b></div>
+		<div class="col-md-2">
+			<select class="form-control" ng-change="change_perpage();" ng-model="spaginate.per_page">
+			<option value="3">3</option>
+			<option value="6">6</option>
+			<option value="9">9</option>
+			</select>
+		</div>
+		
+	</div>
+
+</div>

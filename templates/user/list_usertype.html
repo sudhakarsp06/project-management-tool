@@ -1,0 +1,62 @@
+<div class="row" ng-controller="UsertypemanagerController"  >
+
+<div class="row">
+	<div class="col-md-5 text-right">
+		  &nbsp;
+	</div>
+	<div class="col-md-2 text-right">
+		  <input class="form-control" type="text" value="" ng-model="spaginate.search" />
+	</div>
+	<div class="col-md-1 text-left">
+		<button class="btn btn-primary" ng-click="search();">Search</button>
+	</div>
+	<div class="col-md-1 text-left">
+		<button class="btn btn-primary" ng-click="reset();">Reset</button>
+	</div>
+	<div class="col-md-1 text-left">
+		  <a bt-acl field="CREATE_USERTYPE"  acl="access_control" class="btn btn-primary" href="#/{{pages.CREATE_USERTYPE}}">Add User Types</a>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6 col-md-push-1">
+	<h2>All Users Types</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-9 col-md-push-1">	
+	<table class="table table-hover" ng-init="listuserTypes();">
+		<thead>
+			<tr>
+			  <th>#</th>
+			  <th>Type</th>
+			  <th>Options</th>
+			</tr>
+		  </thead>
+		  <tbody >
+		   
+			<tr ng-if="nodata==''" ng-repeat="list in user_lists">
+			  <td>{{list.id}}</td>
+			  <td><a href="#/{{pages.LIST_USER}}/1?user_type={{list.id}}">{{list.type}}</a></td>
+			  <td><a bt-acl field="EDIT_USERTYPE"  acl="access_control" href="#/{{pages.EDIT_USERTYPE}}/{{list.id}}" title="edit" alt="edit"><span  class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a bt-acl field="DELETE_USERTYPE"  acl="access_control" href="javascript:;" ng-click="removeUser(list.id);"  title="remove" alt="remove"><span  class="glyphicon glyphicon-remove"></span></a></td>
+			</tr>
+			<tr ng-if="nodata!=''"><td colspan="3" class="text-center"><b>{{nodata}}</b></td></tr>
+		</tbody>
+	</table>
+	</div>
+</div>
+	<div class="row">
+		<div class="col-md-4 col-md-push-1">
+			<bt-paginate paginate="spaginate"></bt-paginate>
+		</div>
+		<div class="col-md-3 text-right"><b>Per Page:</b></div>
+		<div class="col-md-3">
+			<select class="form-control" ng-change="change_perpage();" ng-model="spaginate.per_page">
+			<option value="3">3</option>
+			<option value="6">6</option>
+			<option value="9">9</option>
+			</select>
+		</div>
+	</div>
+
+</div>

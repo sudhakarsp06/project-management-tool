@@ -1,0 +1,19 @@
+<div class="row" ng-controller="TicketController">
+
+<div class="col-md-6 col-md-push-2">
+<h2>Ticket ID: {{ticket.id}}</h2>
+
+<div class="col-md-3"><b>Title:</b></div><div class="col-md-9">{{ticket.title}}</div>
+<div class="col-md-3"><b>Description:</b></div><div class="col-md-9">{{ticket.desc}}</div>
+<div class="col-md-3"><b>Priority:</b></div><div class="col-md-9">{{ticket.priority_name}}</div>
+<div class="col-md-3"><b>Created Date:</b></div><div class="col-md-9">{{ticket.created_date}}</div>
+
+<div class="col-md-3">&nbsp;</div><div class="col-md-9">
+<button class="btn" ng-click="cancelAdd();">Cancel</button>
+</div>
+</div>
+</div>
+
+<!--
+totalpage="{{paginate.totalpage}}" currentpage="{{paginate.currentpage}}" nextpage="{{paginate.nextpage}}" prevpage="{{paginate.prevpage}}"
+-->

@@ -1,0 +1,44 @@
+<div class="row" ng-controller="TicketController">
+
+<div class="col-md-4 col-md-push-4">
+<h2>{{ 'ADDTICKET.pagetitle' | translate }}</h2>
+<form class="form-horizontal" name="addticketform" role="form">
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-4 control-label">{{ 'ADDTICKET.title' | translate }}</label>
+    <div class="col-sm-8">
+      <input type="text" name="title" ng-model="ticket.title" class="form-control"  placeholder="Email" required>
+    </div>
+  </div>
+  <ng-valid showerror="0" valid="addticketform.title.$valid" submitted="ticket.submitted" messages="{{error.title}}"></ng-valid>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-4 control-label">{{ 'ADDTICKET.desc' | translate }}</label>
+    <div class="col-sm-8">
+      <textarea class="form-control" name="desc" ng-model="ticket.desc"  placeholder="Password" required></textarea>
+    </div>
+  </div>
+  <ng-valid showerror="0" valid="addticketform.desc.$valid" submitted="ticket.submitted" messages="{{error.desc}}"></ng-valid>
+  
+   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-4 control-label">{{ 'ADDTICKET.priority' | translate }}</label>
+    <div class="col-sm-8">
+     <select class="form-control" name="priority" required ng-model="ticket.priority">
+	 <option value="">Please select a priority</option>
+		<option value="1">Critical</option>
+		<option value="2">High</option>
+		<option value="3">Medium</option>
+		<option value="4">Low</option>
+	 </select>
+    </div>
+  </div>
+  <ng-valid showerror="0" valid="addticketform.priority.$valid" submitted="ticket.submitted" messages="{{error.priority}}"></ng-valid>
+  <input type="hidden" name="ticket_id" value="{{ticket.id}}" ng-if="ticket.id != '' " />	
+  <div class="form-group">
+    <div class="col-sm-offset-4 col-sm-8">
+      <button type="submit" class="btn btn-default" ng-if="ticket.id == '' " ng-click="addTicket();" >{{ 'GENERAL.add' | translate }}</button>
+	  <button type="submit" class="btn btn-default" ng-if="ticket.id != '' " ng-click="addTicket();" >{{ 'GENERAL.edit' | translate }}</button>
+	   <button type="button" class="btn btn-default" ng-click="cancelAdd();" >{{ 'GENERAL.cancel' | translate }}</button>
+    </div>
+  </div>
+</form>
+</div>
+</div>

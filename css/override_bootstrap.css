@@ -1,0 +1,20 @@
+.margin20 {
+	margin: 0px;
+}
+
+ul.autosuggest {
+float:left;
+height:100px;
+}
+
+ul.autosuggest li {
+float:left;
+clear:both;
+list-style-type:none;
+margin:0px;
+padding:0px;
+}
+
+.bs-glyphicons-list li {
+cursor:pointer;
+}

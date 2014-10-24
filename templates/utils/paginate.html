@@ -1,0 +1,17 @@
+<ul class="pagination margin20" >
+<!-- Prev page Starts -->
+<li ng-class="{disabled:paginate.page <= 1}">
+	<a href="#/{{paginate.pageurl}}/{{paginate.page-1}}?{{paginate.urls}}" >&laquo;</a>
+</li>
+<!-- Prev page Ends -->
+<!-- pagination numbers -->
+  <li ng-repeat="page in pages_list" ng-class="{active:page.page == paginate.page}">
+	<a href="#/{{paginate.pageurl}}/{{page.page}}?{{paginate.urls}}" ng-show="page.page">{{page.page}}</a>
+</li>
+<!-- pagination numbers -->
+<!-- Next page starts -->
+<li ng-class="{disabled:paginate.page  >= paginate.total_pages}">
+	<a href="#/{{paginate.pageurl}}/{{nextpage}}?{{paginate.urls}}" >&raquo;</a>
+</li>
+<!-- Next page ends -->
+</ul>

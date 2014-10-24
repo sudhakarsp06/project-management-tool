@@ -1,0 +1,31 @@
+<div class="row" ng-controller="CommentController" ng-init="listcomments(fields.id.value,post_type);">
+	
+
+
+
+	<div class="col-md-8">
+		<h4><span class="glyphicon glyphicon-comment"></span>&nbsp;Comments and History&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="comments_list"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
+	</div>
+	<div id="comments_list" class="panel-collapse collapse in">
+	<div class="col-md-6">
+		<textarea ng-model="comment_text" class="form-control" style="height:127px;width:650px;"></textarea>
+		<br /><br />
+		<button ng-click="parentaddcomment(fields.id.value, post_type);" class="btn btn-primary">Add Comments</button>
+	</div>
+	<div class="col-md-9">	
+		
+			<table class="table table-hover">
+			  <tbody >		   
+				<tr ng-if="comments.nodata==''" ng-repeat="list in comments.data">
+				  <td class="text-left"><b>{{list.created_user}}</b>  commented On <b>{{list.created_date}}</b>: <br />{{list.comment}}</td>	 
+				  
+				</tr>
+				<tr ng-if="comments.nodata!=''"><td colspan="3" class="text-center"><b>{{comments.nodata}}</b></td></tr>
+			</tbody>
+			</table>
+		
+	</div>
+	</div>	
+</div>
+
+

@@ -1,0 +1,77 @@
+<div class="row" ng-controller="UsertypemanagerController" ng-init=" init(); getausertype(); getrolesgroup();  " >
+
+<div class="col-md-9 col-md-pull-1">
+
+<form class="form-horizontal" name="adduserform" role="form">
+  
+  <div class="form-group">
+	<div class="col-md-6 col-md-push-2">
+	  <h2>{{ 'CREATE_USER.pagetitle' | translate }}</h2>	
+	</div>
+	
+  </div>
+  
+  <div class="form-group">
+	<label for="inputEmail3" class="col-sm-4 control-label">{{ 'CREATE_USER.username' | translate }}</label>
+	<div class="col-sm-8">
+	  <input type="text"  name="username" id="username"  ng-model="fields.name.value" class="form-control" placeholder="{{ 'CREATE_USER.username' | translate }}" >
+	</div>	
+  </div>
+<div class="form-group">
+	<div class="col-sm-12 col-md-push-2">
+	<ul id="myTab" class="nav nav-tabs" >
+      <li ng-class="{active:$index == 0}" ng-repeat="group in roles_groups"><a href="#{{group.id}}" contentid="myTabContent" bt-tab tabid="{{group.id}}"  role="tablist" role="tab" data-toggle="tab">{{group.label}}</a></li>
+    </ul>
+	</div>
+</div>
+<div id="myTabContent" class="tab-content">
+	<div ng-class="{'tab-pane fade in active':$index == 0,'tab-pane fade': $index >= 0}" class="tab-pane fade" ng-repeat="group in roles_groups" id="grouplist_{{group.id}}" ng-init="gid=group.id">	
+		<div class="form-group"  ng-init="" ng-repeat="role in roles[gid]" >
+		<label  class="col-sm-4 control-label">{{role.name}}</label>
+		<div class="col-sm-8">
+		<div class="btn-group" data-toggle="buttons">
+		  <label class="btn btn-primary" ng-class="{active:role.yes == 1}">
+			<input type="radio" name="role_{{role.id}}" data-id="{{role.id}}" ng-checked="role.yes == 1" value="1" > Yes
+		  </label>
+		  <label class="btn btn-primary" ng-class="{active:role.yes == 0}">
+			<input type="radio" name="role_{{role.id}}" data-id="{{role.id}}" ng-checked="role.yes == 0" value="0" > No
+		  </label>
+		</div>
+		</div>
+		</div>
+	 </div>
+ </div>
+  <div class="form-group">
+    <div class="col-sm-offset-4 col-sm-8">
+      <button type="submit" class="btn btn-default" ng-show="fields.id.value == 0 " ng-click="adduserType();" >{{ 'GENERAL.add' | translate }}</button>
+	  <button type="submit" class="btn btn-default" ng-show="fields.id.value > 0 " ng-click="adduserType();" >{{ 'GENERAL.update' | translate }}</button>
+	   <button type="button" class="btn btn-default" ng-click="cancel();" >{{ 'GENERAL.cancel' | translate }}</button>
+    </div>
+  </div>
+  <input type="hidden" value="" ng-model="fields.id.value" />
+</form>
+</div>
+</div>
+<style>
+.has-feedback .form-control {
+padding-right:42.5px;
+}
+
+.form-control-feedback {
+position: absolute;
+top: 0px;
+right: -10px;
+z-index: 2;
+display: block;
+width: 34px;
+height: 34px;
+line-height: 34px;
+text-align: center;
+}
+</style>
+<script>
+$('#myTab a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+</script>

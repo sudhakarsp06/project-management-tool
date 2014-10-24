@@ -1,0 +1,50 @@
+<div class="row" ng-controller="TaskmanagerController" ng-init="init();  viewtask(); getstatuss();  " >
+
+<div class="col-md-8"> 
+<h3>{{task.title.value}}</h3>
+
+<p>{{task.details.value}}</p>
+
+<ng-include ng-init="getattachments('task'); post_type = 'task';"  src="'templates/common/attachment.html?t=4'"></ng-include>
+
+<ng-include ng-init="post_type='task';" ng-if="fields.id.value > 0"  src="'templates/comment/list_comment.html?t=1'"></ng-include>
+
+</div>
+<div class="col-md-4">
+<h4>More Details&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="more_details"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
+<ul class="list-group"  id="more_details">
+	<li class="list-group-item"><b>Task Type:</b> {{task.task_type.value}} </li>
+	<li class="list-group-item">Task Status: {{task.status_name.value}} </li>
+	<li class="list-group-item">Project Name: {{task.project_name.value}} </li>
+	<li class="list-group-item">Assigned To: {{task.assigned_name.value}} </li>
+	<li class="list-group-item">Created Date: {{task.created_date.value}} </li>
+	<li class="list-group-item">Created By: {{task.created_name.value}} </li>
+	<li class="list-group-item">Edited Date: {{task.edited_date.value}} </li>
+	<li class="list-group-item">Edited By: {{task.edited_name.value}}</li>
+	<li class="list-group-item">Change Status: 
+		<select class="form-control" ng-model="current_status" bt-change="callme()">
+			<option  ng-selected="current_status == status.id" ng-repeat="status in statuss" value="{{status.id}}">{{status.name}}</option>
+		</select>
+	</li>
+</ul>	
+</div>
+
+
+
+<style>
+.has-feedback .form-control {
+padding-right:42.5px;
+}
+
+.form-control-feedback {
+position: absolute;
+top: 0px;
+right: -10px;
+z-index: 2;
+display: block;
+width: 34px;
+height: 34px;
+line-height: 34px;
+text-align: center;
+}
+</style>
