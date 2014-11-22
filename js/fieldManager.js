@@ -257,6 +257,16 @@ var btfieldManager = function () {
 						},
 					    value: ''						
 					},
+			color:{ 
+						name: 'color', 
+						error: { 
+								0: 'Colour Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+					},
 		};
 		
 		fields.edit_tasktype = 	
@@ -265,6 +275,16 @@ var btfieldManager = function () {
 						name: 'type', 
 						error: { 
 								0: 'It is Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+					},
+			color:{ 
+						name: 'color', 
+						error: { 
+								0: 'Colour Required' 
 						}, 
 						validation: {
 								0:'required'
@@ -285,6 +305,16 @@ var btfieldManager = function () {
 						},
 					    value: ''						
 					},
+			color:{ 
+						name: 'color', 
+						error: { 
+								0: 'Colour Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+					},
 		};
 		
 		fields.edit_status = 	
@@ -298,7 +328,85 @@ var btfieldManager = function () {
 								0:'required'
 						},
 					    value: ''						
+				},
+			color:{ 
+						name: 'color', 
+						error: { 
+								0: 'Colour Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
 					},
+		};
+		
+		fields.create_milestone = 	
+		{
+			name:{ 
+						name: 'type', 
+						error: { 
+								0: 'Milestone Name Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+					},
+			start_date:{ 
+						name: 'start_date', 
+						error: { 
+								0: 'Start Date Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+			},
+			end_date:{ 
+						name: 'end_date', 
+						error: { 
+								0: 'End Date Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+			},
+		};
+		
+		fields.edit_milestone = 	
+		{
+			name:{ 
+						name: 'type', 
+						error: { 
+								0: 'Milestone Name Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+					},
+			start_date:{ 
+						name: 'start_date', 
+						error: { 
+								0: 'Start Date Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+			},
+			end_date:{ 
+						name: 'end_date', 
+						error: { 
+								0: 'End Date Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+			},
 		};
 		
 		
@@ -314,6 +422,16 @@ var btfieldManager = function () {
 						},
 					    value: ''						
 					},
+			color:{ 
+						name: 'color', 
+						error: { 
+								0: 'Colour Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+					},
 		};
 		
 		fields.edit_priority = 	
@@ -322,6 +440,16 @@ var btfieldManager = function () {
 						name: 'type', 
 						error: { 
 								0: 'It is Required' 
+						}, 
+						validation: {
+								0:'required'
+						},
+					    value: ''						
+					},
+			color:{ 
+						name: 'color', 
+						error: { 
+								0: 'Colour Required' 
 						}, 
 						validation: {
 								0:'required'
@@ -403,6 +531,17 @@ var btfieldManager = function () {
 						},
 						value: ''
 			},
+			
+			milestone_id: {
+						name: 'milestone_id',
+						error: {
+							0: 'Milestone Required' 
+						},
+						validation: {
+							0:'required'
+						},
+						value: ''
+			},
 		};
 		
 		fields.edit_task = 	
@@ -471,6 +610,16 @@ var btfieldManager = function () {
 						name: 'priority_id',
 						error: {
 							0: 'Status Required' 
+						},
+						validation: {
+							0:'required'
+						},
+						value: ''
+			},
+			milestone_id: {
+						name: 'milestone_id',
+						error: {
+							0: 'Milestone Required' 
 						},
 						validation: {
 							0:'required'

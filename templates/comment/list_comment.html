@@ -1,30 +1,42 @@
-<div class="row" ng-controller="CommentController" ng-init="listcomments(fields.id.value,post_type);">
-	
-
-
-
+<div class="row" ng-controller="CommentController" ng-init="listcomments(fields.id.value,post_type); ">
 	<div class="col-md-8">
-		<h4><span class="glyphicon glyphicon-comment"></span>&nbsp;Comments and History&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="comments_list"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
+		<a data-toggle="collapse" href="#" bt-toggle toggleid="comments_list" class="attachment_title"><h4></span>&nbsp;Comments and History&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4></a>
 	</div>
 	<div id="comments_list" class="panel-collapse collapse in">
-	<div class="col-md-6">
-		<textarea ng-model="comment_text" class="form-control" style="height:127px;width:650px;"></textarea>
-		<br /><br />
-		<button ng-click="parentaddcomment(fields.id.value, post_type);" class="btn btn-primary">Add Comments</button>
-	</div>
-	<div class="col-md-9">	
-		
-			<table class="table table-hover">
-			  <tbody >		   
-				<tr ng-if="comments.nodata==''" ng-repeat="list in comments.data">
-				  <td class="text-left"><b>{{list.created_user}}</b>  commented On <b>{{list.created_date}}</b>: <br />{{list.comment}}</td>	 
-				  
-				</tr>
-				<tr ng-if="comments.nodata!=''"><td colspan="3" class="text-center"><b>{{comments.nodata}}</b></td></tr>
-			</tbody>
-			</table>
-		
-	</div>
+		<div class="col-md-6">
+			<textarea ng-model="comment_text" class="form-control" style="height:127px;width:650px;"></textarea>
+			<br /><br />
+			<button ng-click="parentaddcomment(fields.id.value, post_type);" class="btn btn-primary">Add Comments</button>
+		</div>
+		<div class="col-md-12" style="margin-top:10px;">
+			<ul class="nav nav-tabs" role="tablist">
+			  <li role="presentation" class="active"><a style="cursor:pointer;" contentid="comment_activity" bt-tab tabid="comment"  role="tablist" role="tab" data-toggle="tab">Comments</a></li>
+			  <li role="presentation"><a  style="cursor:pointer;" contentid="comment_activity" bt-tab tabid="activity"  role="tablist" role="tab" data-toggle="tab">Activity Log</a></li>
+			</ul>
+		</div>
+		<div id="comment_activity" class="col-md-9 tab-content">
+			<div class="col-md-12 tab-pane fade in active" id="grouplist_comment">					
+				<table class="table table-hover" style="margin-top:10px;">
+				  <tbody >		   
+					<tr ng-if="comments.nodata==''" ng-repeat="list in comments.data">
+					  <td class="text-left"><b>{{list.created_user}}</b>  commented On <b>{{list.created_date}}</b>: <br />{{list.comment}}</td>	 
+					  
+					</tr>
+					<tr ng-if="comments.nodata!=''"><td colspan="3" class="text-center"><b>{{comments.nodata}}</b></td></tr>
+				</tbody>
+				</table>				
+			</div>
+			<div class="col-md-12 tab-pane fade" id="grouplist_activity">
+				<table class="table table-hover" style="margin-top:10px;">
+				  <tbody >		   
+					<tr ng-if="logs.nodata==''" ng-repeat="log in logs.data">
+					  <td class="text-left">{{log.log}}</td>	 					  
+					</tr>
+					<tr ng-if="logs.nodata!=''"><td colspan="3" class="text-center"><b>{{logs.nodata}}</b></td></tr>
+				</tbody>
+				</table>	
+			</div>
+		</div>
 	</div>	
 </div>
 

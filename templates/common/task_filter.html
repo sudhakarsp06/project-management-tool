@@ -1,0 +1,89 @@
+<div class="col-md-3 text-left">
+	
+	<div class="list-group">
+      <a href="#" bt-toggle toggleid="" toggleclass="status_filter" togglestyle="slow" class="list-group-item active">
+		<h4 class="list-group-item-heading panel-info">Status&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4>	
+      </a>
+	  <a class="list-group-item autofill">
+	  
+		<div ng-repeat="status in statuss" ng-if="spaginate.status_id.indexOf(status.id) >= 0" style="padding:1px; width:auto; margin-left:5px; float:left;margin-bottom:3px;" class="alert alert-warning alert-dismissible" role="alert">
+			<button type="button" id="{{status.id}}" class="close" data-dismiss="alert"><span ng-click="removefilter()" aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<strong>{{status.name}}</strong>
+		</div>
+		<input style="width:55px;border:none;padding-right:0px;float:left;" ng-init="status_q='';" ng-model="status_q" bt-autofill value=""  />
+		
+	  
+	  </a>
+
+    </div>
+	<div  class="list-group" style="position:relative;top:-20px;">
+		 <a ng-if="spaginate.status_id.indexOf(status.id) < 0" ng-repeat="status in statuss | filter:status_q"  class="list-group-item">{{status.name}}</a>
+	</div>
+	<div class="list-group">
+      <a href="#" bt-toggle toggleid="" toggleclass="priority_filter" togglestyle="slow" class="list-group-item active">
+		<h4 class="list-group-item-heading panel-info">Priority&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4>		
+      </a>
+      <a href="#" reload="reloadPage();" ng-repeat="priority in prioritys" bt-filter class="list-group-item priority_filter">
+		<input  type="checkbox" value="{{priority.id}}" ng-checked="spaginate.priority_id.indexOf(priority.id) >= 0" name="priority_id[]" id="priority_{{priority.id}}" />
+        <h4 class="list-group-item-heading">{{priority.name}}&nbsp;<span ng-show="spaginate.priority_id.indexOf(priority.id) >= 0" class="glyphicon glyphicon-ok"></span></h4>
+      </a>
+    </div>
+	
+	
+	<div class="list-group">
+      <a href="#" bt-toggle toggleid="" toggleclass="project_filter" togglestyle="slow" class="list-group-item active">
+		<h4 class="list-group-item-heading panel-info">Project&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4>		
+      </a>
+      <a href="#" reload="reloadPage();" ng-repeat="project in projects" bt-filter class="list-group-item project_filter">
+		<input  type="checkbox" value="{{project.id}}" ng-checked="spaginate.project_id.indexOf(project.id) >= 0" name="project_id[]" id="project_{{project.id}}" />
+        <h4 class="list-group-item-heading">{{project.title}}&nbsp;<span ng-show="spaginate.project_id.indexOf(project.id) >= 0" class="glyphicon glyphicon-ok"></span></h4>
+      </a>
+    </div>
+	
+	<div class="list-group">
+      <a href="#" bt-toggle toggleid="" toggleclass="assign_filter" togglestyle="slow" class="list-group-item active">
+		<h4 class="list-group-item-heading panel-info">Assigned To ?&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4>		
+      </a>
+      <a href="#" reload="reloadPage();" ng-repeat="user in users" bt-filter class="list-group-item assign_filter">
+		<input  type="checkbox" value="{{user.id}}" ng-checked="spaginate.assigned_to.indexOf(user.id) >= 0" name="user_id[]" id="user_{{user.id}}" />
+        <h4 class="list-group-item-heading">{{user.name}}&nbsp;<span ng-show="spaginate.assigned_to.indexOf(user.id) >= 0" class="glyphicon glyphicon-ok"></span></h4>
+      </a>
+    </div>
+	
+	<div class="list-group">
+      <a href="#" bt-toggle toggleid="" toggleclass="created_filter" togglestyle="slow" class="list-group-item active">
+		<h4 class="list-group-item-heading panel-info">Created By ?&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4>		
+      </a>
+      <a href="#" reload="reloadPage();" ng-repeat="user in users" bt-filter class="list-group-item created_filter">
+		<input  type="checkbox" value="{{user.id}}" ng-checked="spaginate.created_by.indexOf(user.id) >= 0" name="created_id[]" id="user_{{user.id}}" />
+        <h4 class="list-group-item-heading">{{user.name}}&nbsp;<span ng-show="spaginate.created_by.indexOf(user.id) >= 0" class="glyphicon glyphicon-ok"></span></h4>
+      </a>
+    </div>
+	
+	<div class="list-group">
+      <a href="#" bt-toggle toggleid="" toggleclass="tasktype_filter" togglestyle="slow" class="list-group-item active">
+		<h4 class="list-group-item-heading panel-info">Task Types&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4>		
+      </a>
+      <a href="#" reload="reloadPage();" ng-repeat="tasktype in tasktypes" bt-filter class="list-group-item tasktype_filter">
+		<input  type="checkbox" value="{{tasktype.id}}" ng-checked="spaginate.task_type_id.indexOf(tasktype.id) >= 0" name="tasktype_id[]" id="tasktype_{{tasktype.id}}" />
+        <h4 class="list-group-item-heading">{{tasktype.name}}&nbsp;<span ng-show="spaginate.task_type_id.indexOf(tasktype.id) >= 0" class="glyphicon glyphicon-ok"></span></h4>
+      </a>
+    </div>
+	
+	<div class="list-group">
+      <a href="#" bt-toggle toggleid="" toggleclass="milestone_filter" togglestyle="slow" class="list-group-item active">
+		<h4 class="list-group-item-heading panel-info">Milestones&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4>		
+      </a>
+      <a href="#" reload="reloadPage();" ng-repeat="milestone in milestones" bt-filter class="list-group-item milestone_filter">
+		<input  type="checkbox" value="{{milestone.id}}" ng-checked="spaginate.milestone_id.indexOf(milestone.id) >= 0" name="milestone_id[]" id="milestone_{{milestone.id}}" />
+        <h4 class="list-group-item-heading">{{milestone.name}}&nbsp;<span ng-show="spaginate.milestone_id.indexOf(milestone.id) >= 0" class="glyphicon glyphicon-ok"></span></h4>
+      </a>
+    </div>
+		
+		
+			
+			
+		<input style="margin-top:10px;" class="form-control" type="text" value="" placeholder="Search Terms" ng-model="spaginate.search" />
+		<button style="margin-top:10px;" class="btn btn-primary" ng-click="search();">Search</button>
+		<button style="margin-top:10px;" class="btn btn-primary" ng-click="reset();">Reset</button>
+	</div>

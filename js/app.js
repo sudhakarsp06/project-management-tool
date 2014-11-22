@@ -177,7 +177,7 @@ when('/dashboard',
 		templateUrl: 'templates/task/list_task.html',
 		controller: 'TaskmanagerController',
 	}).
-	when('/'+pages_actions.LIST_TASK+'/:page/?per_page&order&assignedto&search&status&project&tasktype&priority',
+	when('/'+pages_actions.LIST_TASK+'/:page/?per_page&order&assignedto&search&status&project&tasktype&priority&milestone_id',
 	{
 		templateUrl: 'templates/task/list_task.html',
 		controller: 'TaskmanagerController',
@@ -211,6 +211,26 @@ when('/dashboard',
 	{
 		templateUrl: 'templates/priority/create_priority.html',
 		controller: 'PrioritymanagerController',
+	}).
+	when('/'+pages_actions.CREATE_MILESTONE+'',
+	{
+		templateUrl: 'templates/milestone/create_milestone.html',
+		controller: 'MilestonemanagerController'		
+	}).
+	when('/'+pages_actions.LIST_MILESTONE+'/:page',
+	{
+		templateUrl: 'templates/milestone/list_milestone.html',
+		controller: 'MilestonemanagerController',
+	}).
+	when('/'+pages_actions.LIST_MILESTONE+'/:page/?per_page&order&field&search',
+	{
+		templateUrl: 'templates/milestone/list_milestone.html',
+		controller: 'MilestonemanagerController',
+	}).	
+	when('/'+pages_actions.EDIT_MILESTONE+'/:id',
+	{
+		templateUrl: 'templates/milestone/create_milestone.html',
+		controller: 'MilestonemanagerController',
 	}).
   otherwise(
 	{

@@ -73,12 +73,19 @@ my_custom_directive.directive('btToggle', [ function() {
 	btToggle.link = function(scope,elem,attr) {		
 		elem.bind('click',function(e) {			
 			e.preventDefault();
-			if( elem.find('span').attr('class') == 'glyphicon glyphicon-chevron-up' ) {
+			if(attr.toggleid != '' ) {
+				var toggle = $('#'+attr.toggleid); 
+			} else {
+				var toggle =  $('.'+attr.toggleclass);
+			}
+			
+			if(elem.find('span').attr('class') == 'glyphicon glyphicon-chevron-up') {
 				elem.find('span').attr('class','glyphicon glyphicon-chevron-down');
+				
 			} else {
 				elem.find('span').attr('class','glyphicon glyphicon-chevron-up');
 			}
-			$('#'+attr.toggleid).toggle();
+			toggle.toggle(attr.togglestyle);
 			//}
 		});
 		
@@ -153,9 +160,10 @@ my_custom_directive.directive('btAjaxupload', [ '$timeout','GENERAL_API_URLS','$
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     // Handle response.
                     //alert(xhr.responseText); // handle response.
-					var data=eval("("+xhr.responseText+")") //retrieve result as an JavaScript object
-					
+					//var data=eval("("+xhr.responseText+")") //retrieve result as an JavaScript object
+					//console.log('coming');
 					scope.$apply(attr.getattachments); 
+					
 					//FIXME - not the correct way to call the parent scope function
                 }
             };
@@ -168,5 +176,73 @@ my_custom_directive.directive('btAjaxupload', [ '$timeout','GENERAL_API_URLS','$
 	};
 	
 	return btAjaxupload;
+
+}]);
+
+
+my_custom_directive.directive('btDatepicker', [ function() {
+
+	var btToggle = {};
+	btToggle.restrict = 'A';
+	btToggle.scope = true;	
+	btToggle.link = function(scope,elem,attr) {		
+		elem.datepicker({ dateFormat: attr.format });		
+	};
+	return btToggle;
+
+}]);
+
+my_custom_directive.directive('btColorpicker', [ function() {
+
+	var btColorpicker = {};
+	btColorpicker.restrict = 'A';
+	btColorpicker.scope = {pickerid:'@',colorcode:'='};	
+	btColorpicker.link = function(scope,elem,attr) {	
+		scope.$watch('colorcode',function(newval, oldval) {
+			var color_option = {};
+			color_option.preferredFormat =  "hex";
+			if(scope.colorcode == '' ) { 
+				color_option.color = '#000000'; 
+			} else {
+				color_option.color = scope.colorcode; 
+			}
+			$("#"+scope.pickerid).spectrum(color_option);
+		});
+	};
+	return btColorpicker;
+
+}]);
+
+my_custom_directive.directive('btLegend', [ function() {
+
+	var btLegend = {};
+	btLegend.restrict = 'E';
+	btLegend.scope = {data:'=',title:'@',tasklist:'@',param:'@',projectid:'@'};	
+	btLegend.templateUrl =  'templates/utils/legend.html?t=1';
+	btLegend.replace = true;
+	return btLegend;
+
+}]);
+
+my_custom_directive.directive('btFilter', [ function() {
+
+	var btFilter = {};
+	btFilter.restrict = 'A';
+	btFilter.scope = true;	
+	btFilter.link = function(scope,elem,attr) {	
+		elem.find('input[type="checkbox"]').hide();
+		
+		elem.bind('click',function(e) {	
+			e.preventDefault();
+			if( elem.find('input[type="checkbox"]').attr('checked') == 'checked' ) {
+				elem.find('input[type="checkbox"]').removeAttr('checked');			
+			} else {
+				elem.find('input[type="checkbox"]').attr('checked',true);			
+			}
+			scope.$apply(attr.reload); 	
+		});
+		
+	};
+	return btFilter;
 
 }]);

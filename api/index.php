@@ -3,7 +3,7 @@ session_start();
 include '../includes/config.php';
 require 'flight/Flight.php';
 
-
+error_reporting(E_ALL | E_NOTICE );
 /* Flight::register('db', 'PDO', array('mysql:host='.SQL_HOST.';dbname='.SQL_DB.','.SQL_USERNAME.','.SQL_PASSWORD));
 $db = Flight::db();
 */
@@ -58,6 +58,7 @@ Flight::route('/userlogin', function(){
 		$response['success'] = "Logged in successfully";
 		$_SESSION['id'] = $result['id'];
 		$_SESSION['user_type'] = $result['user_type'];
+		$_SESSION['username'] = $result['username'];
 
 		$query = $db->prepare(" INSERT INTO users_sessions(users_id, session_id, activity,logged,user_data ) VALUES('".$_SESSION['id']."','".$response['token']."','".date('Y-m-d h:i:s')."','".date('Y-m-d h:i:s')."','".json_encode(array_merge($result,$access))."')");			
 		
@@ -545,30 +546,47 @@ Flight::route('/auto_suggest', function() {
 	echo Flight::json($response);
 });
 
+function get_token() {
+return md5(substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, rand(1,10)));
+
+}
+
 Flight::route('/uploadattachment', function() {
 	global $db,$input;
 	
 	$id = $_GET['id'];
 	$type = $_GET['type'];
 	list(,$ext) = explode('.',$_FILES['myFile']['name']);
-	$label = md5(substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, rand(1,10))).'.'.$ext;
+	$label = get_token().'.'.$ext;
+	
+	
+	if(!is_dir('uploads/'.$type)) {
+		mkdir('uploads/'.$type);
+	}
 	
 	$destination = 'uploads/'.$type.'/'.$id;
 	
 	if(!is_dir($destination)) {
 		mkdir($destination);
 	}
-	
 	move_uploaded_file($_FILES['myFile']['tmp_name'],  $destination.'/'.$label);
-	$query = $db->prepare(" INSERT INTO attachments(post_id, post_type, name, label, created_date, created_by, edited_date, edited_by) VALUES($id, '$type','".$_FILES['myFile']['name']."','$label','".date('Y-m-d')."','".$_SESSION['id']."','".date('Y-m-d')."','".$_SESSION['id']."') ");	
+	$mime_type = $_FILES['myFile']['type'];	
+	
+	
+	$query = $db->prepare(" INSERT INTO attachments(post_id, post_type, name, label, created_date, created_by, edited_date, edited_by,mime_type) VALUES($id, '$type','".$_FILES['myFile']['name']."','$label','".date('Y-m-d')."','".$_SESSION['id']."','".date('Y-m-d')."','".$_SESSION['id']."','$mime_type') ");	
 	$query->execute();
 	$post_id = $db->lastInsertId();
+	
+	$time = time();
+	$log = $_SESSION['username'].' uploaded a file "'.$_FILES['myFile']['name'].'" on '.date('l jS \of F Y',$time);
+	$activity_type = ACTIVITY_LOG_UPLOAD;
+	log_activity($id, $type, $log,$time,$activity_type);
 	
 	
 	
 	//$db->
 	
-	echo Flight::json($response);
+	//echo Flight::json($response);
 });
 
 
@@ -582,10 +600,97 @@ Flight::route('/getattachments', function() {
 		$id = isset($input->id)?$input->id:'';
 		$type = isset($input->type)?$input->type:'';
 		$response['nodata'] = "";
+		$json_list = array();
+		$json_list = get_all_attachments($id,$type);
 		if(empty($json_list)) {
 			$response['nodata'] = "No users found";
 		}
-		$response['data'] = get_all_attachments($id,$type);
+		$response['data'] = $json_list ;
+	}
+	echo Flight::json($response);
+});
+
+Flight::route('/getactivitylog', function() {
+	global $db,$input;
+	if( !isAuth() ) {		
+		$response['error'] = "You are not authorised to see that page.";		
+	} else {		
+		$post_id = isset($input->post_id)?$input->post_id:'';
+		$post_type = isset($input->post_type)?$input->post_type:'';
+		$response['nodata'] = "";
+		$json_list = array();
+		$json_list = get_all_logs($post_id,$post_type);
+		if(empty($json_list)) {
+			$response['nodata'] = "No activity found";
+		}
+		$response['data'] = $json_list;
+	}
+	echo Flight::json($response);
+});
+
+Flight::route('/getattachmenttoken', function() {
+	global $db,$input;
+	if( !isAuth() ) {		
+		$response['error'] = "You are not authorised to see that page.";		
+	} else {
+		$id = isset($input->id)?$input->id:'';
+		$temp_token = $_SESSION['tmp_token'] = get_token();
+		$response['data'] = HTTP_PATH . 'api/downloadattachment?token='.$temp_token.'&id='.$id;
+	}
+	echo Flight::json($response);
+});
+
+function log_activity($post_id, $post_type, $log,$time, $activity_type) {
+
+global $db;
+
+$query = $db->prepare(" INSERT INTO activity(post_id, post_type, log, updated,activity_type) VALUES($post_id, '$post_type','$log','".$time."','$activity_type')");
+$query->execute();
+
+}
+
+
+Flight::route('/downloadattachment', function() {
+	global $db,$input;
+	$token = '';
+	if(isset($_SESSION['tmp_token'])) {
+		$token = $_SESSION['tmp_token'];
+	}
+	if( !isset($_SESSION['id']) || $_GET['token'] != $token ) {		
+		$response['error'] = "You are not authorised to see that page.";		
+	} else {
+		unset($_SESSION['tmp_token']);		
+		$id = isset($_GET['id'])?$_GET['id']:'';
+		
+		//fetch the attach
+		$query = $db->prepare(" SELECT * FROM attachments where id = $id");	
+		$query->execute();
+	    while($result = $query->fetch()) {
+			//print_r( $result );
+			$label = $result['label'];	
+			$post_id = $result['post_id'];	
+			$type = $result['post_type'];
+			$mime_type = $result['mime_type'];
+			$name = $result['name'];		
+		}
+		$file = 'uploads/'.$type.'/'.$post_id . '/' . $label; 
+		$filename = 'uploads/'.$type.'/'.$post_id . '/' . $name; 
+		
+		ob_clean();
+		header('Content-Description: File Transfer');
+		header('Content-Type: '.$mime_type);
+		header('Content-Disposition: attachment; filename='.basename($filename));
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($file));
+		ob_clean();
+		flush();
+		readfile($file);
+		exit;
+		
+		
 	}
 	echo Flight::json($response);
 });
@@ -593,6 +698,7 @@ Flight::route('/getattachments', function() {
 
 Flight::route('/removeaattachment', function() {
 	global $db,$input;
+	$response = array();
 	if( !isAuth() ) {		
 		$response['error'] = "You are not authorised to see that page.";		
 	} else {		
@@ -609,24 +715,50 @@ Flight::route('/removeaattachment', function() {
 		$type = $result['post_type'];
 		$post_id = $result['post_id'];
 		$label = $result['label'];
+		$name = $result['name'];
 		unlink('uploads/'.$type.'/'.$post_id . '/'.$label);
 		$query = $db->prepare(" DELETE FROM attachments where id = $id LIMIT 1 ");	
 		$query->execute();		
+		
+		$time = time();
+		$log = $_SESSION['username'].' removed file name '.$name.' on '.date('l jS \of F Y',	$time);
+		$activity_type = ACTIVITY_LOG_REMOVE_UPLOAD;
+		log_activity($post_id, $type, $log, $time, $activity_type);
 	}
 	echo Flight::json($response);
 });
 
 
-function get_all_attachments($id,$type,$post_id = '') {
+function get_all_logs($post_id, $post_type) {
 
 	global $db;
 	
+	
+	$query = $db->prepare("  SELECT log FROM activity where post_id = $post_id and post_type =  '$post_type' order by updated desc ");
+	$query->execute();
+	$json_list = '';
+	while($result = $query->fetch()) {
+		//print_r( $result );
+		$json_list[] = array( 
+		'log' => $result['log'],	
+		);
+	}
+	
+	return $json_list;
+
+}
+
+function get_all_attachments($id,$type,$post_id = '') {
+
+	global $db;
+	$where = '';
 	if($post_id) {
 		$where = ' and id = $post_id';
 	}	
 	//echo "  SELECT * FROM task_attachments where post_id = $id and post_type =  '$type' $where"; exit;
 	$query = $db->prepare("  SELECT * FROM attachments where post_id = $id and post_type =  '$type' $where");
 	$query->execute();
+	$json_list = '';
 	while($result = $query->fetch()) {
 		//print_r( $result );
 		$json_list[] = array( 
@@ -647,6 +779,7 @@ include 'status.php';
 include 'tasks.php';
 include 'comments.php';
 include 'priority.php';
+include 'milestone.php';
 
 
 

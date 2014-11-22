@@ -10,7 +10,7 @@ Flight::route('/create_comment', function() {
 		$post_type = addslashes($input->post_type);	
 		$post_id = $input->post_id;	
 		
-		$id = $input->id;
+		$id = isset($input->id)?$input->id:'';
 		
 		if($id) { //This form is for Edit
 			if( empty($comment)  ) {
@@ -29,6 +29,12 @@ Flight::route('/create_comment', function() {
 				$response['success'] = 'Comment Created successfully';
 				$query->execute();
 				$id = $db->lastInsertId();
+				
+				$time = time();
+				$log = $_SESSION['username'].' commented on '.date('l jS \of F Y',$time);
+				$activity_type = ACTIVITY_LOG_COMMENT;
+				log_activity($post_id, $post_type, $log,$time,$activity_type);
+				
 				//whenever they insert a new role here, try to propogate this role to all the existing user types
 				//with yes = 0
 				
@@ -65,6 +71,7 @@ Flight::route('/getcomments', function() {
 	
 		
 		$query->execute(); */
+		$json_list = '';
 	    while($result = $query->fetch()) {
 			//print_r( $result );
 			$json_list[] = array( 
@@ -82,8 +89,8 @@ Flight::route('/getcomments', function() {
 		}
 		$response['data'] = $json_list;
 		
-		$response['pagination']['total_rows'] = $rows;
-		$response['pagination']['total_pages'] = $total_pages;	
+		//$response['pagination']['total_rows'] = $rows;
+		//$response['pagination']['total_pages'] = $total_pages;	
 	}
 	echo Flight::json($response);
 });

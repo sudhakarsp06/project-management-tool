@@ -6,14 +6,15 @@ Flight::route('/create_priority', function() {
 		$response['error'] = "You are not authorised to see that page.";		
 	} else {
 		
-		$name = $input->name;		
+		$name = $input->name;
+		$color = $input->color;		
 		$id = $input->id;
 		
 		if($id) { //This form is for Edit
 			if(empty($name) ) {
 				$response['error'] = "All the fields are mandatory";
 			} else {		
-				$query = $db->prepare(" UPDATE priority SET name = '$name', edited_by = ".$_SESSION['id'].", edited_date = '".date('Y-m-d')."' where id = $id ");			
+				$query = $db->prepare(" UPDATE priority SET name = '$name', color = '$color', edited_by = ".$_SESSION['id'].", edited_date = '".date('Y-m-d')."' where id = $id ");			
 				$response['success'] = 'Status Updated successfully';
 				$query->execute();
 			}
@@ -22,7 +23,7 @@ Flight::route('/create_priority', function() {
 			if(empty($name) ) {
 				$response['error'] = "All the fields are mandatory";
 			} else {						
-				$query = $db->prepare(" INSERT INTO priority(name,created_date, created_by) VALUES('$name','".date('Y-m-d')."',".$_SESSION['id'].")");			
+				$query = $db->prepare(" INSERT INTO priority(name,created_date, created_by,color) VALUES('$name','".date('Y-m-d')."',".$_SESSION['id'].",'$color')");			
 				$response['success'] = 'Priority Created successfully';
 				$query->execute();
 				$id = $db->lastInsertId();
@@ -43,7 +44,7 @@ Flight::route('/getprioritys', function() {
 		$response['error'] = "You are not authorised to see that page.";		
 	} else {
 		
-		
+		$nolimit = isset($input->nolimit)?$input->nolimit:0;
 		$page = isset($input->page)?$input->page:1;
 		$search = isset($input->search)?$input->search:'';
 		//$rows = isset($input->total_rows)?$input->total_rows:0;
@@ -61,14 +62,18 @@ Flight::route('/getprioritys', function() {
 			$where = ' where '.implode(' and ',$where);
 		}
 		//if($search != ''  ) {				
-			$query = $db->prepare(" SELECT id,name,created_by FROM priority ".$where);
+			$query = $db->prepare(" SELECT id,name,created_by,color FROM priority ".$where);
 			$query->execute();
 			$rows = $query->rowCount();
 		//}		
 		$total_pages = ceil($rows/$items_per_page);
 		$limit = ($page - 1 ) * $items_per_page;
 		
-		$query = $db->prepare("  SELECT id,name,created_by FROM priority  $where  LIMIT $limit,$items_per_page");	
+		$sql = "  SELECT id,name,created_by,color FROM priority  $where ";
+		if(!$nolimit) {
+			$sql .= "   LIMIT $limit,$items_per_page ";
+		}
+		$query = $db->prepare($sql);
 	
 		
 		$query->execute();
@@ -77,7 +82,8 @@ Flight::route('/getprioritys', function() {
 			$json_list[] = array( 
 			'id' => $result['id'],
 			'name' => $result['name'],
-			'created_by' => $result['created_by']
+			'created_by' => $result['created_by'],
+			'color' => $result['color']
 			);
 		}
 		$response['nodata'] = "";
@@ -100,7 +106,7 @@ Flight::route('/getallprioritys', function() {
 	} else {
 		
 		
-		$query = $db->prepare("  SELECT id,name,created_by FROM priority  ");	
+		$query = $db->prepare("  SELECT id,name,created_by,color FROM priority  ");	
 	
 		
 		$query->execute();
@@ -109,7 +115,8 @@ Flight::route('/getallprioritys', function() {
 			$json_list[] = array( 
 			'id' => $result['id'],
 			'name' => $result['name'],
-			'created_by' => $result['created_by']
+			'created_by' => $result['created_by'],
+			'color' => $result['color']
 			);
 		}
 		$response['nodata'] = "";
@@ -132,13 +139,15 @@ Flight::route('/getapriority', function() {
 		
 		$id = isset($input->id)?$input->id:1;
 		
-		$query = $db->prepare(" SELECT id,name FROM priority where id = $id");	
+		$query = $db->prepare(" SELECT id,name,color FROM priority where id = $id");	
 		
 		$query->execute();
 	    while($result = $query->fetch()) {
 			//print_r( $result );
 			$response['id'] = $result['id'];		
-			$response['name'] = $result['name'];						
+			$response['name'] = $result['name'];
+			$response['color'] = $result['color'];
+				
 		}
 	}
 	echo Flight::json($response);

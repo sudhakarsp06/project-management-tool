@@ -49,14 +49,7 @@
 		<div class="col-md-4 col-md-push-1">
 			<bt-paginate paginate="spaginate"></bt-paginate>
 		</div>
-		<div class="col-md-3 text-right"><b>Per Page:</b></div>
-		<div class="col-md-3">
-			<select class="form-control" ng-change="change_perpage();" ng-model="spaginate.per_page">
-			<option value="3">3</option>
-			<option value="6">6</option>
-			<option value="9">9</option>
-			</select>
-		</div>
+		<ng-include src="'templates/common/per_page.html'"></ng-include>
 	</div>
 
 </div>

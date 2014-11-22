@@ -86,7 +86,10 @@ angular.module('UserManagment.controllers').
 		//This is used to compose the URL for the fields in the list header
 		$scope.spaginate.page = (typeof $routeParams.page != 'undefined')?$routeParams.page:1;
 		
-		$scope.spaginate.per_page = (typeof $location.search().per_page != 'undefined')?$location.search().per_page:3;
+			//This is used to compose the URL for the fields in the list header
+		$scope.spaginate.per_page = (typeof $location.search().per_page != 'undefined')?$location.search().per_page:$scope.paginate_settings.defaultpagesize;		
+		$scope.pagesizes = $scope.paginate_settings.pagesizes;
+		
 		$scope.spaginate.search = $location.search().search;
 		$scope.spaginate.user_type = $location.search().user_type;
 		

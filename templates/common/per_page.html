@@ -1,0 +1,4 @@
+<div class="col-md-2 text-right"><b>Per Page</b></div><div class="col-md-2 text-right"><select class="form-control" ng-change="change_perpage();" ng-model="spaginate.per_page">
+			<option ng-repeat="pagesize in pagesizes" ng-selected="spaginate.per_page == pagesize.data" value="{{pagesize.data}}">{{pagesize.data}}</option>
+			
+	</select></div>

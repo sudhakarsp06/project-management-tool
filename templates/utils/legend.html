@@ -1,0 +1,8 @@
+<div>
+<br /><p><b>{{title}}</b></p>
+<ul style="list-style-type:none; float:left;">
+<li ng-repeat="d in data.data" style="float:left;clear:both; margin-top:5px;">
+<div style="float:left;background-color:{{d.color}};width:20px;height:20px;"></div><div style="float:left;padding-left:2px;"><a href="#/{{tasklist}}/1?{{param}}={{d.id}}&project_id={{projectid}}">{{d.label}}({{d.value}})</a></div>
+</li>
+</ul>
+</div>

@@ -31,7 +31,7 @@ var translations = {
 		edittitle: 'Edit a Task Type',
 		title: 'Create a Task Type',
 		proj_title: 'Task Type',
-		
+		color: 'Colour'
 			
 	},
 	
@@ -47,6 +47,7 @@ var translations = {
 		priority: 'Task Priority',
 		tasktype: 'Task Type',
 		proj_title: 'Tasks',
+		milestone: 'Milestone'
 		
 			
 	},
@@ -56,6 +57,18 @@ var translations = {
 		edittitle: 'Edit a Status',
 		title: 'Create a Status',
 		proj_title: 'Status',
+		color: 'Colour'
+		
+			
+	},
+	
+	CREATE_MILESTONE: {
+		pagetitle: 'Create a Milestone',
+		edittitle: 'Edit a Milestone',
+		title: 'Create a Milestone',
+		proj_title: 'Status',
+		start_date: 'Start Date',
+		end_date: 'End Date'
 		
 			
 	},
@@ -65,7 +78,7 @@ var translations = {
 		edittitle: 'Edit a Priority',
 		title: 'Create a Priority',
 		proj_title: 'Priority',
-		
+		color: 'Colour'
 			
 	},
 	

@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('UserManagment.controllers').
- controller('TaskmanagerController', ['$scope','$location','$routeParams','$cacheFactory','$filter','$translate','TaskServices','Validationservice','Storageservices','$route','GeneralServices','ProjectsServices','StatusServices','UserServices','TasktypeServices','PriorityServices',function( $scope, $location, $routeParams,$cacheFactory, $filter, $translate, TaskServices,Validationservice,Storageservices,$route,GeneralServices,ProjectsServices,StatusServices,UserServices,TasktypeServices,PriorityServices) {
+ controller('TaskmanagerController', ['$scope','$location','$routeParams','$cacheFactory','$filter','$translate','TaskServices','Validationservice','Storageservices','$route','GeneralServices','ProjectsServices','StatusServices','UserServices','TasktypeServices','PriorityServices','MilestoneServices',function( $scope, $location, $routeParams,$cacheFactory, $filter, $translate, TaskServices,Validationservice,Storageservices,$route,GeneralServices,ProjectsServices,StatusServices,UserServices,TasktypeServices,PriorityServices,MilestoneServices) {
 	
 	
 	//Setting the auth error into the scope from translate
@@ -67,6 +67,7 @@ angular.module('UserManagment.controllers').
 						$scope.response.error = data.error;					
 					} else {				
 						$scope.response.success =  data.success;
+						$scope.getactivitylog($scope.fields.id.value,'task');
 					}
 			}, function(data){
 		});
@@ -91,7 +92,7 @@ angular.module('UserManagment.controllers').
 	
 	/* Get all projects */	
 	$scope.getprojects = function() {
-		ProjectsServices.getProjects({}, function(data) {
+		ProjectsServices.getProjects({nolimit:'1'}, function(data) {
 			$scope.projects = data.data; //success
 		}, function(data) {
 		});
@@ -100,7 +101,7 @@ angular.module('UserManagment.controllers').
 	
 	/* Get all Status */	
 	$scope.getstatuss = function() {
-		StatusServices.getStatuses({}, function(data) {
+		StatusServices.getStatuses({nolimit:'1'}, function(data) {
 			$scope.statuss = data.data; //success
 		}, function(data) {
 		});
@@ -109,7 +110,7 @@ angular.module('UserManagment.controllers').
 	
 	/* Get all Status */	
 	$scope.getprioritys = function() {
-		PriorityServices.getallprioritys({}, function(data) {
+		PriorityServices.getallprioritys({nolimit:'1'}, function(data) {
 			$scope.prioritys = data.data; //success
 		}, function(data) {
 		});
@@ -127,12 +128,21 @@ angular.module('UserManagment.controllers').
 	
 	/* Get all Task Type */	
 	$scope.gettasktypes = function() {
-		TasktypeServices.getTaskTypes({}, function(data) {
+		TasktypeServices.getTaskTypes({nolimit:'1'}, function(data) {
 			$scope.tasktypes = data.data; //success
 		}, function(data) {
 		});
 	}	
 	/* Get all Task Type */
+	
+	/* Get all Milestones */	
+	$scope.getmilestones = function() {
+		MilestoneServices.getAllMilestones({nolimit:'1'}, function(data) {
+			$scope.milestones = data.data; //success
+		}, function(data) {
+		});
+	}	
+	/* Get all Milestones */
 	
 	/* To Add a user */
 	$scope.addtask = function() {	
@@ -162,9 +172,8 @@ angular.module('UserManagment.controllers').
 	{		
 		$scope.spaginate = {};
 		//This is used to compose the URL for the fields in the list header
-		$scope.spaginate.per_page = (typeof $location.search().per_page != 'undefined')?$location.search().per_page:3;
-		
-		
+		$scope.spaginate.per_page = (typeof $location.search().per_page != 'undefined')?$location.search().per_page:$scope.paginate_settings.defaultpagesize;		
+		$scope.pagesizes = $scope.paginate_settings.pagesizes;
 		
 		$scope.spaginate.search = $location.search().search;
 		
@@ -174,6 +183,7 @@ angular.module('UserManagment.controllers').
 		$scope.spaginate.created_by = ($location.search().created_by)?$location.search().created_by:0;
 		$scope.spaginate.task_type_id = ($location.search().task_type_id)?$location.search().task_type_id:0;
 		$scope.spaginate.priority_id = ($location.search().priority_id)?$location.search().priority_id:0;
+		$scope.spaginate.milestone_id = ($location.search().milestone_id)?$location.search().milestone_id:0;
 		
 		$scope.spaginate.page = (typeof $routeParams.page != 'undefined')?$routeParams.page:1;
 		$scope.spaginate.urls = GeneralServices.getUrl({per_page:$scope.spaginate.per_page,search:$scope.spaginate.search});
@@ -201,6 +211,11 @@ angular.module('UserManagment.controllers').
 		//override the status id here
 		if(typeof created_by != 'undefined') {
 			$scope.spaginate.created_by = created_by;
+		}
+		
+		//override the status id here
+		if(typeof milestone_id != 'undefined') {
+			$scope.spaginate.milestone_id = milestone_id;
 		}
 		
 		
@@ -235,6 +250,7 @@ angular.module('UserManagment.controllers').
 		$scope.spaginate.assigned_to = 0;
 		$scope.spaginate.task_type_id = 0;
 		$scope.spaginate.priority_id = 0;
+		$scope.spaginate.milestone_id = 0;
 		
 		$scope.reloadPage();
 	}
@@ -336,39 +352,18 @@ angular.module('UserManagment.controllers').
 		}
 		/* Task Type Section */
 		
-		
-		/* if( $scope.spaginate.status_id != '' ) {
-			params.status_id = $scope.spaginate.status_id;
-		} 
-		
-		if( $scope.spaginate.priority_id != '' ) {
-			params.priority_id = $scope.spaginate.priority_id;
+		/* Milestone Section */
+		tmp = [];
+		for(var i = 0; i< $('input[name="milestone_id[]"]').length;i++) {
+			if($('input[name="milestone_id[]"]')[i].checked == true ) {
+				tmp.push($('input[name="milestone_id[]"]')[i].value);
+			}
+			
+		}		
+		if(tmp != '' ) {
+			params.milestone_id = $scope.spaginate.milestone_id = tmp.join(',');
 		}
-		
-		if( $scope.spaginate.project_id != '' ) {
-			params.project_id = $scope.spaginate.project_id;
-		}
-		
-		if( $scope.spaginate.assigned_to != '' ) {
-			params.assigned_to = $scope.spaginate.assigned_to;
-		}
-		
-		if( $scope.spaginate.created_by != '' ) {
-			params.created_by = $scope.spaginate.created_by;
-		}
-		
-		
-		if( $scope.spaginate.task_type_id != '' ) {
-			params.task_type_id = $scope.spaginate.task_type_id;
-		}
-		
-		*/
-		
-		
-		
-		
-		
-		
+		/* Milestone Section */
 		
 		
 		var urls = GeneralServices.getUrl(params);
@@ -376,7 +371,12 @@ angular.module('UserManagment.controllers').
 	}
 	
 	$scope.getattachments = function(type) {	
+		console.log('type',type);
 		$scope.parentattachments(type,$scope.fields.id.value);
 	}
+	
+	
+	
+	
 
   }]);

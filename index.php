@@ -11,6 +11,7 @@
 
     <link rel="icon" href="../../favicon.ico">
 
+
     <title>Project Management Tool</title>
 
     <!-- Bootstrap core CSS -->
@@ -19,6 +20,8 @@
     <!-- Custom styles for this template -->
     <link href="css/justified-nav.css" rel="stylesheet">
 	<link href="css/override_bootstrap.css" rel="stylesheet">
+	<link href="css/jquery-ui.min.css" rel="stylesheet">
+	<link href="css/spectrum.css" rel="stylesheet">
   </head>
 <script>
 var pages_actions = <?php $content = file_get_contents( HTTP_PATH . 'api/getpages'); echo $content; ?>
@@ -42,6 +45,7 @@ var pages_actions = <?php $content = file_get_contents( HTTP_PATH . 'api/getpage
 			  <ul class="nav navbar-nav">
 				<li class="active"><a href="#home" bt-active>Home</a></li>				
 				<li  ng-show="auth.loggedin"><a href="#dashboard" bt-active>Dashboard</a></li>	
+				
 			 </ul>
 			 <ul class="nav navbar-nav navbar-right">
 				<li ><a href="#login" ng-hide="auth.loggedin">Login</a></li>
@@ -56,6 +60,7 @@ var pages_actions = <?php $content = file_get_contents( HTTP_PATH . 'api/getpage
 					<li bt-acl field="LIST_STATUS"  acl="access_control"><a href="#{{pages.LIST_STATUS}}/1">Manage Status</a></li>
 					<li bt-acl field="LIST_TASK"  acl="access_control"><a href="#{{pages.LIST_TASK}}/1">Manage Tasks</a></li>
 					<li bt-acl field="LIST_PRIORITY"  acl="access_control"><a href="#{{pages.LIST_PRIORITY}}/1">Manage Priority</a></li>
+					<li bt-acl field="LIST_MILESTONE"  acl="access_control"><a href="#{{pages.LIST_MILESTONE}}/1">Manage Milestones</a></li>
 					<li class="divider"></li>					
 					<li><a href="#logout" ng-click="logout();">Logout</a></li>
 				  </ul>
@@ -82,6 +87,8 @@ var pages_actions = <?php $content = file_get_contents( HTTP_PATH . 'api/getpage
     <!-- Placed at the end of the document so the pages load faster -->
     <!-- Placed at the end of the document so the pages load faster -->
 	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
+	<script src="js/spectrum.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/fieldManager.js"></script>
 	<script src="js/chart.js"></script>
@@ -90,6 +97,8 @@ var pages_actions = <?php $content = file_get_contents( HTTP_PATH . 'api/getpage
 	<script src="lib/angular/angular-resource.js"></script>
 	<script src="lib/angular/angular-cookies.js"></script>
 	<script src="lib/angular/angular-translate.js"></script>
+	<script src="lib/angular/angular-ui-router.min.js"></script>
+	
 	<script src="js/app.js"></script>
 	<script src="js/filters/filters.js"></script>
 
@@ -108,6 +117,7 @@ var pages_actions = <?php $content = file_get_contents( HTTP_PATH . 'api/getpage
 	<script src="js/services/PriorityServices.js"></script>
 	<script src="js/services/TaskServices.js"></script>
 	<script src="js/services/CommentServices.js"></script>
+	<script src="js/services/MilestoneServices.js"></script>
 	
 	<script src="js/controllers/HomeController.js"></script>
 	<script src="js/controllers/LoginController.js"></script>	
@@ -123,6 +133,7 @@ var pages_actions = <?php $content = file_get_contents( HTTP_PATH . 'api/getpage
 	<script src="js/controllers/PrioritymanagerController.js"></script>
 	<script src="js/controllers/TaskmanagerController.js"></script>
 	<script src="js/controllers/CommentController.js"></script>
+	<script src="js/controllers/MilestonemanagerController.js"></script>
 	<script src="js/uploader.js"></script>
 	
 	<script src="js/directives/makeActiveDirective.js"></script>

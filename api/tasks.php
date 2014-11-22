@@ -12,23 +12,24 @@ Flight::route('/create_task', function() {
 		$project_id = $input->project_id;	
 		$assigned_to = $input->assigned_to;	
 		$task_type_id = $input->task_type_id;	
-		$priority_id = $input->priority_id;	
+		$priority_id = $input->priority_id;
+		$milestone_id = $input->milestone_id;
 		$id = $input->id;
 		
 		if($id) { //This form is for Edit
-			if( empty($title) || empty($details) || empty($status_id) || empty($project_id) || empty($assigned_to) || empty($task_type_id) || empty($priority_id) ) {
+			if( empty($title) || empty($details) || empty($status_id) || empty($project_id) || empty($assigned_to) || empty($task_type_id) || empty($priority_id) || empty($milestone_id)  ) {
 				$response['error'] = "All the fields are mandatory";
 			} else {		
-				$query = $db->prepare(" UPDATE tasks SET title = '$title', details = '$details', status_id = '$status_id', project_id = '$project_id', assigned_to = '$assigned_to', task_type_id = '$task_type_id', modified_by = '".$_SESSION['id']."', modified_date = '".date('Y-m-d')."', priority_id = '$priority_id' where id = $id ");			
+				$query = $db->prepare(" UPDATE tasks SET title = '$title', details = '$details', status_id = '$status_id', project_id = '$project_id', assigned_to = '$assigned_to', task_type_id = '$task_type_id', modified_by = '".$_SESSION['id']."', modified_date = '".date('Y-m-d')."', priority_id = '$priority_id', milestone_id = '$milestone_id' where id = $id ");			
 				$response['success'] = 'Task Updated successfully';
 				$query->execute();
 			}
 		} else { // This is for add
 			
-			if(empty($title) || empty($details) || empty($status_id) || empty($project_id) || empty($assigned_to) || empty($task_type_id) || empty($priority_id) ) {
+			if(empty($title) || empty($details) || empty($status_id) || empty($project_id) || empty($assigned_to) || empty($task_type_id) || empty($priority_id) || empty($milestone_id) ) {
 				$response['error'] = "All the fields are mandatory";
 			} else {						
-				$query = $db->prepare(" INSERT INTO tasks(title,details,status_id,project_id,assigned_to,task_type_id,created_by,created_date,modified_by,modified_date,priority_id) VALUES('$title','$details','$status_id','$project_id','$assigned_to','$task_type_id','".$_SESSION['id']."','".date('Y-m-d')."','".$_SESSION['id']."','".date('Y-m-d')."','$priority_id')");			
+				$query = $db->prepare(" INSERT INTO tasks(title,details,status_id,project_id,assigned_to,task_type_id,created_by,created_date,modified_by,modified_date,priority_id,milestone_id) VALUES('$title','$details','$status_id','$project_id','$assigned_to','$task_type_id','".$_SESSION['id']."','".date('Y-m-d')."','".$_SESSION['id']."','".date('Y-m-d')."','$priority_id','$milestone_id')");			
 				$response['success'] = 'Task Created successfully';
 				$query->execute();
 				$id = $db->lastInsertId();
@@ -58,6 +59,7 @@ Flight::route('/gettasks', function() {
 		$search = isset($input->search)?$input->search:'';
 		$created_by = isset($input->created_by)?$input->created_by:1;
 		$task_type_id = isset($input->task_type_id)?$input->task_type_id:'';
+		$milestone_id = isset($input->milestone_id)?$input->milestone_id:'';
 		
 		//$rows = isset($input->total_rows)?$input->total_rows:0;
 		$items_per_page = isset($input->per_page)?$input->per_page:3;
@@ -115,12 +117,22 @@ Flight::route('/gettasks', function() {
 			$where .= " AND ( ".implode(' OR ',$created_by_where).") ";
 		}
 		
+		if(strstr($milestone_id,',') || $milestone_id > 0) {
+			$milestone_bys = explode(',',$milestone_id);
+			foreach($milestone_bys as $id) {
+				$milestone_id_where[] = ' t.milestone_id = '.$id;
+			}
+			$where .= " AND ( ".implode(' OR ',$milestone_id_where).") ";
+		}
+		
+		
+		
 		/* if($_SESSION['user_type'] > 0 && $created_by) {
 			$where .= " and t.created_by = ".$_SESSION['id'];
 		} */
 		
 		//if($search != ''  ) {				
-			$query = $db->prepare(" SELECT c.username as created_by, t.title, t.id, u.username, p.title as project_name, s.name as status_name, tt.name as task_name  FROM tasks t, users u,  status s, task_types tt, projects p, users c  where p.id = t.project_id and  c.id = t.created_by and u.id = t.assigned_to and s.id = t.status_id and tt.id = t.task_type_id ".$where);
+			$query = $db->prepare(" SELECT  m.name,c.username as created_by, t.title, t.id, u.username, p.title as project_name, s.name as status_name, tt.name as task_name  FROM tasks t, users u,  status s, task_types tt, projects p, users c, priority pr, milestones m  where p.id = t.project_id and  c.id = t.created_by and u.id = t.assigned_to and s.id = t.status_id and tt.id = t.task_type_id and pr.id = t.priority_id and m.id = t.milestone_id ".$where);
 
 			$query->execute();
 			$rows = $query->rowCount();
@@ -130,12 +142,13 @@ Flight::route('/gettasks', function() {
 		
 		
 		
-		$query = $db->prepare("SELECT pr.name as priority_name, c.username as created_by, t.title, t.id, u.username, p.title as project_name, s.name as status_name, tt.name as task_name  FROM tasks t, users u,  status s, task_types tt, projects p, users c, priority pr  where p.id = t.project_id and  c.id = t.created_by and u.id = t.assigned_to and s.id = t.status_id and tt.id = t.task_type_id and pr.id = t.priority_id ".$where."  LIMIT $limit,$items_per_page");	
+		$query = $db->prepare("SELECT m.name, pr.name as priority_name, c.username as created_by, t.details, t.title, t.id, u.username, p.title as project_name, s.name as status_name, tt.name as task_name  FROM tasks t, users u,  status s, task_types tt, projects p, users c, priority pr, milestones m  where p.id = t.project_id and  c.id = t.created_by and u.id = t.assigned_to and s.id = t.status_id and tt.id = t.task_type_id and pr.id = t.priority_id and m.id = t.milestone_id ".$where."  LIMIT $limit,$items_per_page");	
 		
 		
 	
 		
 		$query->execute();
+		$json_list = '';
 	    while($result = $query->fetch()) {
 			//print_r( $result );
 			$json_list[] = array( 
@@ -170,7 +183,7 @@ Flight::route('/getatask', function() {
 		
 		$id = isset($input->id)?$input->id:1;
 		
-		$query = $db->prepare(" SELECT t.priority_id, t.created_date, t.created_by, t.modified_date, t.modified_by, t.id,t.title, t.details, t.assigned_to, t.project_id, t.task_type_id, t.status_id, tt.name as task_type, s.name as status_name, u.username as assigned_name, p.title as project_name, cr.username as created_name, ed.username as edited_name  FROM tasks t, task_types tt, status s, users u, users cr, projects p, users ed, priority pr where pr.id = t.priority_id and t.id = $id and assigned_to = u.id and s.id = status_id and tt.id = task_type_id and p.id = project_id and cr.id = t.created_by and ed.id = t.modified_by");	
+		$query = $db->prepare(" SELECT  m.id as milestone_id, t.priority_id, t.created_date, t.created_by, t.modified_date, t.modified_by, t.id,t.title, t.details, t.assigned_to, t.project_id, t.task_type_id, t.status_id, tt.name as task_type, s.name as status_name, u.username as assigned_name, p.title as project_name, cr.username as created_name, ed.username as edited_name  FROM tasks t, task_types tt, status s, users u, users cr, projects p, users ed, priority pr, milestones m where pr.id = t.priority_id and t.id = $id and assigned_to = u.id and s.id = status_id and tt.id = task_type_id and p.id = project_id and cr.id = t.created_by and ed.id = t.modified_by and m.id = t.milestone_id");	
 		
 		$query->execute();
 	    while($result = $query->fetch()) {
@@ -194,7 +207,7 @@ Flight::route('/getatask', function() {
 			$response['created_name']['value'] = $result['created_name'];
 			$response['edited_name']['value'] = $result['edited_name'];
 			$response['priority_id']['value'] = $result['priority_id'];
-			
+			$response['milestone_id']['value'] = $result['milestone_id'];
 			
 		}
 	}
@@ -220,9 +233,23 @@ Flight::route('/changetaskstatus', function() {
 	} else {
 		$id = $input->id;
 		$status_id = $input->status;
+		
+		$query = $db->prepare(" SELECT status_id, s.name FROM tasks t, status s where t.id = $id");			
+		$result = $query->execute();
+		$old_status = $result['name'];
+		
+		$query = $db->prepare(" SELECT status_id, s.name FROM tasks t, status s where t.id = $status_id");			
+		$result = $query->execute();
+		$new_status = $result['name'];
+		
 		$query = $db->prepare(" UPDATE tasks SET status_id = $status_id where id = $id");			
 		$query->execute();
 		$response['success'] = 'Task Status updated successfully';
+		
+		$time = time();
+		$log = $_SESSION['username'].' changed the status of this task from  '.$old_status.' to '.$new_status . ' on '.date('l jS \of F Y',	$time);
+		$activity_type = ACTIVITY_LOG_STATUS;
+		log_activity($id, 'task', $log,$time,$activity_type);
 	}
 	echo Flight::json($response);
 });

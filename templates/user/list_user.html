@@ -53,14 +53,7 @@
 		<div class="col-md-4 col-md-push-1">
 			<bt-paginate paginate="spaginate"></bt-paginate>
 		</div>
-		<div class="col-md-2 text-right"><b>Per Page:</b></div>
-		<div class="col-md-2">
-			<select class="form-control" ng-change="change_perpage();" ng-model="spaginate.per_page">
-			<option value="3">3</option>
-			<option value="6">6</option>
-			<option value="9">9</option>
-			</select>
-		</div>
+		<ng-include src="'templates/common/per_page.html'"></ng-include>
 		<div class="col-md-2 text-right"><b>User Types:</b></div>
 		<div class="col-md-2 text-right">
 			<select  class="form-control" ng-change="change_usertype();" ng-model="spaginate.user_type">

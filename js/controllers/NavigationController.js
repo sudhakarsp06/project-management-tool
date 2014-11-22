@@ -1,11 +1,12 @@
 'use strict';
 
-/* Controllers */
+/* Parent controller for rest of the Controllers */
 
 var controller = angular.module('UserManagment.controllers').
- controller('NavigateController', ['$location','$scope','Loginservices','$translate','Storageservices','CommentServices','GeneralServices',function($location,$scope,Loginservices,$translate,Storageservices,CommentServices,GeneralServices) {
+ controller('NavigateController', ['$location','$scope','Loginservices','$translate','Storageservices','CommentServices','GeneralServices','UI_CONFIG',function($location,$scope,Loginservices,$translate,Storageservices,CommentServices,GeneralServices,UI_CONFIG) {
 	
 	$scope.auth = {};
+	$scope.paginate_settings = UI_CONFIG;
 	$scope.attachments = new Array;
 	$scope.post_id = $scope.post_type = '';
 	$scope.auth.loggedin = Loginservices.isAuth();
@@ -56,14 +57,7 @@ var controller = angular.module('UserManagment.controllers').
 			
 		});
 	}
-	
-	$scope.listcomments = function(post_id, post_type) {
-		CommentServices.getcomments({post_id:post_id,post_type:post_type},function(response) {
-			$scope.comment_collection = response;
-			
-		}, function(response) {
-		});
-	}
+
 	
 	$scope.editcomment = function() {
 	
@@ -81,6 +75,7 @@ var controller = angular.module('UserManagment.controllers').
 	}
 	
 	$scope.parentattachments = function(type,id) {	
+		console.log('type',type);
 		GeneralServices.getattachments({id:id, 'type': type},
 			function(data){
 				if( data.error ) {
@@ -88,17 +83,32 @@ var controller = angular.module('UserManagment.controllers').
 				} else {	
 					console.log('data.data',data.data);
 					$scope.attachments =  data.data;
-					
+					$scope.getactivitylog(id,type);
 					
 				}
 		}, function(data){
 		});
 	}
 	
-	$scope.removeattachment = function(id) {	
+	$scope.getattachmenttoken = function(id) {	
+		
+		GeneralServices.getattachmenttoken({id:id}, function(response) {
+			if(response.error) {
+				$scope.response.error = response.error;
+			} else {
+				//$scope.reloadPage();
+				location.href = response.data;
+			}
+		}, function() {		
+		} );
+	}
+	
+	$scope.removeattachment = function(id,post_id,post_type) {	
 		GeneralServices.removeaattachment({id:id},
 		function(data){
 				$('#attach_'+id).remove();
+				console.log('cominghere',post_id,post_type);
+				$scope.getactivitylog(post_id,post_type);
 				$scope.response.success = 'Attachment Removed';
 		}, function(data){
 		});
@@ -107,5 +117,17 @@ var controller = angular.module('UserManagment.controllers').
 	$scope.router = function(path,params) {
 		$location.path('/'+path+'/'+params);
 	}
+	
+	$scope.getactivitylog = function(post_id,post_type) {
+		
+		GeneralServices.getactivitylog({post_id:post_id,post_type:post_type},
+		function(data){
+				$scope.logs = data;
+		}, function(data){
+		});
+	}
+	
+	
+
 
   }]);

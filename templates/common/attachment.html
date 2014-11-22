@@ -1,11 +1,11 @@
-<br /><h4><span class="glyphicon glyphicon-paperclip"></span> Attachments&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="attachment_list"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
+<a data-toggle="collapse" href="#" bt-toggle toggleid="attachment_list" class="attachment_title"><h4></span> Attachments&nbsp;<span class="glyphicon glyphicon-chevron-up"></span></h4></a>
 
 <div id="attachment_list" class="panel-collapse collapse in">
 <div ng-init="" ng-repeat="file in attachments" id="attach_{{file.id}}" class="bs-callout  bs-callout-info bs-callout-short">
-	{{file.name}}&nbsp;<a ng-click="removeattachment(file.id);"><span class="glyphicon glyphicon-trash text-right"></span></a>
+	<a style="cursor:pointer;" ng-click="getattachmenttoken(file.id);">{{file.name}}</a>&nbsp;<a ng-click="removeattachment(file.id,fields.id.value,post_type);"><span class="glyphicon glyphicon-trash text-right"></span></a>
 </div>
 
 <br />
 
-<div id="dropzone" getattachments="getattachments({{post_type}});"  bt-ajaxupload ttype="{{post_type}}" tid="{{fields.id.value}}" class="col-md-4 text-center col-md-pull-1" style="margin-left:61px; height:200px; border:2px dotted grey;">Drop the files on me</div>
+<div id="dropzone" getattachments="getattachments('{{post_type}}');"  bt-ajaxupload ttype="{{post_type}}" tid="{{fields.id.value}}" class="col-md-4 text-center col-md-pull-1" style="margin-left:61px; height:200px; border:2px dotted grey;">Drop the files on me</div>
 </div><br />

@@ -7,7 +7,7 @@
 // In this case it is a simple value service.
 
 angular.module('UserManagment.services').
-constant('PROJECT_API_URLS',{'add':'api/create_project','getprojects':'api/getprojects','getproject':'api/getaproject', 'removeproject':'api/removeproject','getassignees':'api/getassignees','removeassign':'api/removeassignees','gettasksbystatus':'api/gettasksbystatus'});
+constant('PROJECT_API_URLS',{'add':'api/create_project','getprojects':'api/getprojects','getproject':'api/getaproject', 'removeproject':'api/removeproject','getassignees':'api/getassignees','removeassign':'api/removeassignees','gettasksbystatus':'api/gettasksby'});
 
  
 angular.module('UserManagment.services').

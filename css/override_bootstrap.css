@@ -18,3 +18,16 @@ padding:0px;
 .bs-glyphicons-list li {
 cursor:pointer;
 }
+a.attachment_title, a.attachment_title:hover {
+color:#000;
+text-decoration:none;
+}
+.attachment_title h4 {
+padding-bottom:5px;
+border-bottom:1px solid #cecece;
+}
+
+.autofill {
+height:auto;
+min-height:75px;
+}

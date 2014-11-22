@@ -39,7 +39,8 @@ angular.module('UserManagment.controllers').
 	
 	$scope.listcomments = function(post_id, post_type) {
 		CommentServices.getcomments({post_id:post_id,post_type:post_type},function(response) {
-			$scope.comments = response;			
+			$scope.comments = response;	
+			$scope.getactivitylog(post_id,post_type);	
 		}, function(response) {
 		});
 	}

@@ -1,105 +1,11 @@
-<div class="row" ng-controller="TaskmanagerController" ng-init="gettasktypes(); getusers();getstatuss(); getprojects(); getprioritys();"  >
+<div class="row" ng-controller="TaskmanagerController"   >
 
-<script>
-$(document).ready(function() {
-
-
-
-$('#clickable').on('click',clickme);
-
-});
-
-var clickme = function(e) {
-
-	e.preventDefault();
-	console.log('coming');
-	return false;
-}
-</script>
 
 
 <div class="row">
 	
 	
-	<div class="col-md-3 text-left">
-		 <h2>Filters</h2>	
-		 <!--select multiple name="user_type" class="form-control" ng-model="spaginate.status_id">
-			<option value="0">ALL Status</option>
-			<option ng-repeat="status in statuss" ng-selected="spaginate.status_id.indexOf(status.id) >= 0"  value="{{status.id}}">{{status.name}}</option>
-		</select-->
-		<h4>Status Filters&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="status_filter"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
-		<ul class="list-group"   id="status_filter">
-			<li class="list-group-item" ng-repeat="status in statuss">
-				<input ng-click="reloadPage();" ng-checked="spaginate.status_id.indexOf(status.id) >= 0" type="checkbox" value="{{status.id}}" name="status_id[]" id="status_{{status.id}}" /><label for="status_{{status.id}}" >{{status.name}}</label>
-			</li>
-		</ul>
-		
-		
-		<h4>Priority Filters&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="priority_filter"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
-		<ul class="list-group"   id="priority_filter">
-			<li class="list-group-item" ng-repeat="priority in prioritys">
-				<input ng-click="reloadPage();" ng-checked="spaginate.priority_id.indexOf(priority.id) >= 0" type="checkbox" value="{{priority.id}}" name="priority_id[]" id="priority_{{priority.id}}" /><label for="priority_{{priority.id}}" >{{priority.name}}</label>
-			</li>
-		</ul>
-		
-		<!--select style="margin-top:10px;" multiple name="user_type" class="form-control" ng-model="spaginate.priority_id">
-			<option value="0">ALL Priority</option>
-			<option ng-repeat="priority in prioritys" ng-selected="spaginate.priority_id.indexOf(priority.id) >= 0"  value="{{priority.id}}">{{priority.name}}</option>
-		</select-->
-	
-		 <!--select style="margin-top:10px;" multiple name="user_type" class="form-control" ng-model="spaginate.project_id">
-			<option value="0">ALL Projects</option>
-			<option ng-repeat="project in projects" ng-selected="spaginate.project_id.indexOf(project.id) >= 0"  value="{{project.id}}">{{project.title}}</option>
-		 </select-->
-		 
-		<h4>Project Filters&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="project_filter"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
-		<ul class="list-group"   id="project_filter">
-			<li class="list-group-item" ng-repeat="project in projects">
-				<input ng-click="reloadPage();" ng-checked="spaginate.project_id.indexOf(project.id) >= 0" type="checkbox" value="{{project.id}}" name="project_id[]" id="project_{{project.id}}" /><label for="project_{{project.id}}" >{{project.title}}</label>
-			</li>
-		</ul>
-	
-			
-		<!--select style="margin-top:10px;" multiple name="user_type" class="form-control" ng-model="spaginate.assigned_to">
-			<option value="0">ALL Assigned To</option>
-			<option ng-repeat="user in users" ng-selected="spaginate.assigned_to.indexOf(user.id) >= 0"  value="{{user.id}}">{{user.name}}</option>
-		</select-->
-		
-		<h4>Assignee Filters&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="assign_filter"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
-		<ul class="list-group"   id="assign_filter">
-			<li class="list-group-item" ng-repeat="user in users">
-				<input ng-click="reloadPage();" ng-checked="spaginate.assigned_to.indexOf(user.id) >= 0" type="checkbox" value="{{user.id}}" name="user_id[]" id="user_{{user.id}}" /><label for="user_{{user.id}}" >{{user.name}}</label>
-			</li>
-		</ul>
-		
-		<!--select style="margin-top:10px;" multiple name="user_type" class="form-control" ng-model="spaginate.created_by">
-			<option value="0">ALL Created By</option>
-			<option ng-repeat="user in users" ng-selected="spaginate.created_by.indexOf(user.id) >= 0"  value="{{user.id}}">{{user.name}}</option>
-		</select-->
-		
-		<h4>Created By Filters&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="created_filter"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
-		<ul class="list-group"   id="created_filter">
-			<li class="list-group-item" ng-repeat="user in users">
-				<input ng-click="reloadPage();" ng-checked="spaginate.created_by.indexOf(user.id) >= 0" type="checkbox" value="{{user.id}}" name="created_id[]" id="user_{{user.id}}" /><label for="user_{{user.id}}" >{{user.name}}</label>
-			</li>
-		</ul>
-			
-		<!--select style="margin-top:10px;" multiple name="user_type" class="form-control" ng-model="spaginate.task_type_id">
-			<option value="0">ALL Task Types</option>
-			<option ng-repeat="tasktype in tasktypes" ng-selected="spaginate.task_type_id.indexOf(tasktype.id) >= 0"  value="{{tasktype.id}}">{{tasktype.name}}</option>
-		</select-->
-		
-		<h4>Task Type Filters&nbsp;<a data-toggle="collapse" href="#" bt-toggle toggleid="tasktype_filter"><span class="glyphicon glyphicon-chevron-up"></span></a></h4>
-		<ul class="list-group"   id="tasktype_filter">
-			<li class="list-group-item" ng-repeat="tasktype in tasktypes">
-				<input ng-click="reloadPage();" ng-checked="spaginate.task_type_id.indexOf(tasktype.id) >= 0" type="checkbox" value="{{tasktype.id}}" name="tasktype_id[]" id="tasktype_{{tasktype.id}}" /><label for="tasktype_{{tasktype.id}}" >{{tasktype.name}}</label>
-			</li>
-		</ul>
-		
-		<input style="margin-top:10px;" class="form-control" type="text" value="" placeholder="Search Terms" ng-model="spaginate.search" />
-		<button style="margin-top:10px;" class="btn btn-primary" ng-click="search();">Search</button>
-		<button style="margin-top:10px;" class="btn btn-primary" ng-click="reset();">Reset</button>
-	</div>
+	<ng-include ng-init="gettasktypes(); getusers();getstatuss(); getprojects(); getprioritys(); getmilestones();" src="'templates/common/task_filter.html?t=335'"></ng-include>
 
 	<div class="col-md-9">
 	<h2>All Tasks</h2><a bt-acl field="CREATE_TASK"  acl="access_control" class="btn btn-primary text-right" href="#/{{pages.CREATE_TASK}}">Add Task</a>	
@@ -136,14 +42,9 @@ var clickme = function(e) {
 		</tbody>
 	</table>
 	<div class="col-md-8">
-	<bt-paginate paginate="spaginate"></bt-paginate>
+		<bt-paginate paginate="spaginate"></bt-paginate>
 	</div>
-	<div class="col-md-4 text-right">
-	<select class="form-control" ng-change="change_perpage();" ng-model="spaginate.per_page">
-			<option value="3">3</option>
-			<option value="6">6</option>
-			<option value="9">9</option>
-	</select>
+			<ng-include src="'templates/common/per_page.html'"></ng-include>
 	</div>
 	</div>
 </div>

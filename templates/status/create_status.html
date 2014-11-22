@@ -17,6 +17,13 @@
 	  <input type="text"   ng-model="fields.name.value" class="form-control" placeholder="{{ 'CREATE_STATUS.title' | translate }}" >
 	</div>	
   </div>
+  
+  <div class="form-group">
+	<label for="inputEmail3" class="col-sm-4 control-label">{{ 'CREATE_STATUS.color' | translate }}</label>
+	<div class="col-sm-8">
+	  <input type="text" bt-colorpicker pickerid="status_color" colorcode="fields.color.value" id="status_color"   ng-model="fields.color.value" class="form-control" placeholder="{{ 'CREATE_STATUS.color' | translate }}" >
+	</div>	
+  </div>
 
 
      	
